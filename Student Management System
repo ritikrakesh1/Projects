@@ -1,0 +1,182 @@
+import mysql.connector
+
+
+class creation_database:
+
+    def __init__(self, dbname):
+        self.dbname = dbname
+    
+    def db(self):
+        db = mysql.connector.connect(
+            host  = ' localhost',
+            user = 'root',
+            password = 'ritik123',
+            database = 'p21'
+        )
+
+    def createDB(self):
+        mycursor = db.cursor()
+        mycursor.execute('create databse {}'.format(self.dbname))
+
+    def useDB(self):
+        mycursor = db.cursor()
+        mycursor.execute('use {}'.format(self.dbname)) 
+
+    def create_table(self, table_str):
+        try:
+            mycursor = db.cursor()
+            mycursor.execute(table_str)
+        except Exception as e:
+            print(e)
+
+
+
+student_table = """create table student (
+                roolnumber int auto_increment primary key,
+                student_name varchar(20) not null,
+                age int,
+                sex char(2),
+                pythonMark,
+                classTeacher_id,
+                fees int default 1000
+                );"""
+
+admin_table = """create table administrations (
+              admin_id int auto_increment primary key,
+              password varchar(20) not null,
+              admin_name varchar(20)
+              );"""
+
+teacher_table = """create table teacher_principal (
+                teacher_id int auto_increment primary key,
+                teacher_name varchar(20),
+                teacher_age int,
+                teacher_salary int,
+                class_teacher varchar(5)
+                );"""
+
+
+def navigate():
+    print("Where do you want to go?")
+    user_input = input("Enter 1 for Admin\n2for Student\n3 for Teacher:")
+    while value:
+        if user_input == '1':
+            print('Inside Admin category')
+            print('1 for Read Admin data')
+            print('2 for Delete Admin data')
+            print('3 for Create Admin data')
+            admin_user_input = input("Enter:")
+
+            if admin_user_input == '1':
+                print("You have entered Admin read section")
+                print('This is Admin data')
+                cursor = db.cursor()
+                cursor.execute('SELECT * FROM administrations;')
+                v = cursor.fetchall()
+                print(v)
+            elif admin_user_input == '2':
+                print('You have entered to delete Admin table')
+                cursor = db.cursor()
+                cursor.execute('DROP administrations;')
+            elif admin_user_input == '3':
+                print('You have entered to Admin Insert Section')
+                print('Please enter the required field')
+                password = input('Give admin password:')
+                admin_name = input('Give admin_name:')
+                create_admin_data = """insert into administrations
+                                    (password, admin_name) values (
+                                        {}, {}
+                                    );""".format(password, admin_name)
+                try:
+                    cursor = db.cursor()
+                    cursor.execute(create_admin_data)
+                    db.commit()
+                    db.close()
+                    print('You have successfully inserted the values')
+                except:
+                    print("There is an error")
+
+
+        elif user_input == '2':
+            print('Inside Student category')
+            print('1 for Read Student data')
+            print('2 for Delete Student data')
+            print('3 for Create Student data')
+            student_user_input = input("Enter:")
+
+            if student_user_input == '1':
+                print("You have entered Student read section")
+                print('This is Student data')
+                cursor = db.cursor()
+                cursor.execute('SELECT * FROM student;')
+                v = cursor.fetchall()
+                print(v)
+            elif student_user_input == '2':
+                print('You have entered to delete Student table')
+                cursor = db.cursor()
+                cursor.execute('DROP student;')
+            elif student_user_input == '3':
+                print('You have entered to Student Insert Section')
+                print('Please enter the required field')
+                student_name = input('Give student_name:')
+                age = input('Give age:')
+                sex = input('Give sex:')
+                pythonMark = input('Give pythonMark:')
+                classTeacher_id = input('Give classTeacher_id:')
+                fees = input('Give fees:')
+                create_student_data = """insert into student
+                                    (student_name, age, sex, pythonMark, classTeacher_id, fees) values (
+                                        {}, {}, {}, {}, {}, {}
+                                    )""".format(student_name, age, sex, pythonMark, classTeacher_id, fees)
+                try:
+                    cursor = db.cursor()
+                    cursor.execute(create_student_data)
+                    db.commit()
+                    db.close()
+                    print('You have successfully inserted the values')
+                except:
+                    print("There is an error")
+
+        elif user_input == '3':
+            print('Inside teacher_principal category')
+            print('1 for Read teacher_principal data')
+            print('2 for Delete teacher_principal data')
+            print('3 for Create teacher_principal data')
+            teacher_user_input = input("Enter:")
+
+            if teacher_user_input == '1':
+                print("You have entered teacher_principal read section")
+                print('This is teacher_principal data')
+                cursor = db.cursor()
+                cursor.execute('SELECT * FROM teacher_principal;')
+                v = cursor.fetchall()
+                print(v)
+            elif teacher_user_input == '2':
+                print('You have entered to delete teacher_principal table')
+                cursor = db.cursor()
+                cursor.execute('DROP teacher_principal;')
+            elif teacher_user_input == '3':
+                print('You have entered to teacher_principal Insert Section')
+                print('Please enter the required field')
+                teacher_name = input('Give teacher_name:')
+                teacher_age = input('Give age:')
+                teacher_salary = input('Give salary:')
+                class_teacher = input('Give class_teacher:')
+                create_teacher_data = """insert into teacher_principal
+                                    (teacher_name, teacher_age, teacher_salary, class_teacher) values (
+                                        {}, {}, {}, {}
+                                    )""".format(teacher_name, teacher_age, teacher_salary, class_teacher)
+                try:
+                    cursor = db.cursor()
+                    cursor.execute(create_teacher_data)
+                    db.commit()
+                    db.close()
+                    print('You have successfully inserted the values')
+                except:
+                    print("There is an error")
+
+        elif user_input == 'exit':
+            value = False
+        else:
+            print('Please enter a valid input\nEnter exit to quit')
+            navigate()
